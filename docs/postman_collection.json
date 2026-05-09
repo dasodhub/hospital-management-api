@@ -1,0 +1,374 @@
+{
+  "info": {
+    "name": "Hospital Management System API",
+    "description": "Postman collection for Group 4 Hospital Management System API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"System Admin\",\n  \"email\": \"admin@hospital.com\",\n  \"password\": \"password123\",\n  \"phone\": \"08012345678\",\n  \"role\": \"admin\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Register a new user account. This endpoint is public and does not require authentication."
+          },
+          "response": [
+            {
+              "name": "User registered successfully",
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"User registered successfully\",\n  \"data\": {\n    \"user\": {\n      \"id\": \"69ff01f3ac79332499cb4a02\",\n      \"fullName\": \"System Admin\",\n      \"email\": \"admin@hospital.com\",\n      \"phone\": \"08012345678\",\n      \"role\": \"admin\",\n      \"isActive\": true\n    },\n    \"token\": \"{{token}}\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@hospital.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Login a registered user and return a JWT token."
+          },
+          "response": [
+            {
+              "name": "Login successful",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"user\": {\n      \"id\": \"69ff01f3ac79332499cb4a02\",\n      \"fullName\": \"System Admin\",\n      \"email\": \"admin@hospital.com\",\n      \"phone\": \"08012345678\",\n      \"role\": \"admin\",\n      \"isActive\": true\n    },\n    \"token\": \"{{token}}\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "me"]
+            },
+            "description": "Fetch the profile of the currently authenticated user."
+          },
+          "response": [
+            {
+              "name": "Profile fetched successfully",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Profile fetched successfully\",\n  \"data\": {\n    \"_id\": \"69ff01f3ac79332499cb4a02\",\n    \"fullName\": \"System Admin\",\n    \"email\": \"admin@hospital.com\",\n    \"phone\": \"08012345678\",\n    \"role\": \"admin\",\n    \"isActive\": true,\n    \"createdAt\": \"2026-05-08T15:46:52.722Z\",\n    \"updatedAt\": \"2026-05-08T15:46:52.722Z\",\n    \"__v\": 0\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users"]
+            },
+            "description": "Fetch all users. This endpoint should be accessed by an admin."
+          },
+          "response": [
+            {
+              "name": "Users fetched successfully",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Users fetched successfully\",\n  \"data\": [\n    {\n      \"_id\": \"69ff01f3ac79332499cb4a02\",\n      \"fullName\": \"System Admin\",\n      \"email\": \"admin@hospital.com\",\n      \"phone\": \"08012345678\",\n      \"role\": \"admin\",\n      \"isActive\": true,\n      \"createdAt\": \"2026-05-08T15:46:52.722Z\",\n      \"updatedAt\": \"2026-05-08T15:46:52.722Z\",\n      \"__v\": 0\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Single User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}"]
+            },
+            "description": "Fetch one user by user ID. Replace {{user_id}} with the real MongoDB user ID."
+          },
+          "response": [
+            {
+              "name": "User fetched successfully",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"User fetched successfully\",\n  \"data\": {\n    \"_id\": \"69ff01f3ac79332499cb4a02\",\n    \"fullName\": \"System Admin\",\n    \"email\": \"admin@hospital.com\",\n    \"phone\": \"08012345678\",\n    \"role\": \"admin\",\n    \"isActive\": true,\n    \"createdAt\": \"2026-05-08T15:46:52.722Z\",\n    \"updatedAt\": \"2026-05-08T15:46:52.722Z\",\n    \"__v\": 0\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"System Admin\",\n  \"phone\": \"08012345666\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}"]
+            },
+            "description": "Update a user. Replace {{user_id}} with the real MongoDB user ID."
+          },
+          "response": [
+            {
+              "name": "User updated successfully",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"User updated successfully\",\n  \"data\": {\n    \"_id\": \"69ff01f3ac79332499cb4a02\",\n    \"fullName\": \"System Admin\",\n    \"email\": \"admin@hospital.com\",\n    \"phone\": \"08012345666\",\n    \"role\": \"admin\",\n    \"isActive\": true,\n    \"createdAt\": \"2026-05-08T15:46:52.722Z\",\n    \"updatedAt\": \"2026-05-09T09:18:20.240Z\",\n    \"__v\": 0\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Disable User",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}/disable",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}", "disable"]
+            },
+            "description": "Disable a user account. Replace {{user_id}} with the real MongoDB user ID."
+          },
+          "response": [
+            {
+              "name": "User disabled successfully",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"User disabled successfully\",\n  \"data\": {\n    \"_id\": \"69ff01f3ac79332499cb4a02\",\n    \"fullName\": \"System Admin\",\n    \"email\": \"admin@hospital.com\",\n    \"phone\": \"08012345666\",\n    \"role\": \"admin\",\n    \"isActive\": false,\n    \"createdAt\": \"2026-05-08T15:46:52.722Z\",\n    \"updatedAt\": \"2026-05-09T09:20:40.451Z\",\n    \"__v\": 0\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Enable User",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}/enable",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}", "enable"]
+            },
+            "description": "Enable a disabled user account. Replace {{user_id}} with the real MongoDB user ID."
+          },
+          "response": [
+            {
+              "name": "User enabled successfully",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"User enabled successfully\",\n  \"data\": {\n    \"_id\": \"69ff01f3ac79332499cb4a02\",\n    \"fullName\": \"System Admin\",\n    \"email\": \"admin@hospital.com\",\n    \"phone\": \"08012345666\",\n    \"role\": \"admin\",\n    \"isActive\": true,\n    \"createdAt\": \"2026-05-08T15:46:52.722Z\",\n    \"updatedAt\": \"2026-05-09T09:24:13.204Z\",\n    \"__v\": 0\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}"]
+            },
+            "description": "Delete a user account. Replace {{user_id}} with the real MongoDB user ID."
+          },
+          "response": [
+            {
+              "name": "User deleted successfully",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"User deleted successfully\",\n  \"data\": null\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5050",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "69ff01f3ac79332499cb4a02",
+      "type": "string"
+    }
+  ]
+}

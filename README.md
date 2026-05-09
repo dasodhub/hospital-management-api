@@ -79,6 +79,28 @@ npm start
 
 /api 
 
+## API Endpoints 
+## Auth & User API Endpoints
+
+### Auth Endpoints
+
+| Method | Endpoint | Description | Access |
+|---|---|---|---|
+| POST | `/api/auth/register` | Register a new user | Public |
+| POST | `/api/auth/login` | Login user and return JWT token | Public |
+| GET | `/api/auth/me` | Get logged-in user profile | Authenticated user |
+
+### User Endpoints
+
+| Method | Endpoint | Description | Access |
+|---|---|---|---|
+| GET | `/api/users` | Get all users | Admin only |
+| GET | `/api/users/:id` | Get single user by ID | Admin only |
+| PATCH | `/api/users/:id` | Update user details | Admin only |
+| PATCH | `/api/users/:id/disable` | Disable user account | Admin only |
+| PATCH | `/api/users/:id/enable` | Enable user account | Admin only |
+| DELETE | `/api/users/:id` | Delete user account | Admin only |
+
 ## Team Workflow
 
 •⁠  ⁠main → stable branch
