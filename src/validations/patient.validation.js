@@ -1,6 +1,5 @@
 const Joi = require("joi");
 
-// ─── Create Patient Validation ────────────────────────
 const createPatientSchema = Joi.object({
   gender: Joi.string()
     .valid("male", "female", "other")
@@ -59,7 +58,6 @@ const createPatientSchema = Joi.object({
   allergies: Joi.array().items(Joi.string()).default([]),
 });
 
-// ─── Update Patient Validation ────────────────────────
 const updatePatientSchema = Joi.object({
   gender: Joi.string().valid("male", "female", "other"),
   dateOfBirth: Joi.date(),
