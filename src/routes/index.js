@@ -7,6 +7,7 @@ router.use("/users", require("./user.routes"));
 
 router.use("/patients", require("./patient.routes"));
 router.use("/departments", require("./department.routes"));
+router.use("/doctors", require("./doctor.routes"));
 
 
 
