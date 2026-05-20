@@ -114,3 +114,69 @@ TS Academy Group 4 — Hospital Management System Team
 ## License
 
 MIT
+
+--------------------------------------------------------------------------------------------
+
+BILLING MODULE POSTMAN SAMPLES
+
+1. Create A Bill
+
+Endpoint: localhost:5000/api/billings
+
+Method: POST
+
+Header - Authorization: Bearer <Token>
+Data - Content-Type: application/json
+
+Body:
+{
+    "patient": "PATIENT-ID-HERE",
+    "appointment": "APPOINTMENT-ID-HERE",
+    "consultant": "CONSULTATION-ID-HERE",
+    "billItems": [
+        {
+            "itemName": "Consultation Fee",
+            "quantity": 2,
+            "unitPrice": 10000
+        },
+        {
+            "itemName": "Malaria Test",
+            "quantity": 5,
+            "unitPrice": 5000
+        },
+        {
+            "itemName": "Drugs",
+            "quantity": 4,
+            "unitPrice": 2500
+        }
+    ],
+    "notes": "Patient paid partially"
+}
+
+2. Get All Bills
+
+Endpoint: localhost:5000/api/billings
+
+Method: GET
+
+Header - Authorization: Bearer <Token>
+Data - Content-Type: application/json
+
+3. Get A Single Bill
+
+Endpoint: localhost:5000/api/billings/:id
+
+Method: GET
+
+Header - Authorization: Bearer <Token>
+Data - Content-Type: application/json
+
+4. Mark Bill As Paid
+
+Endpoint: localhost:5000/api/billings/:id/pay
+
+Method: PUT/PATCH
+
+Header - Authorization: Bearer <Token>
+
+--------------------------------------------------------------------------------------------
