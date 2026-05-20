@@ -8,6 +8,8 @@ router.use("/appointments", require("./appointment.routes"));
 router.use("/patients", require("./patient.routes"));
 router.use("/departments", require("./department.routes"));
 router.use("/doctors", require("./doctor.routes"));
+router.use("/consultations", require("./consultation.routes"));
+
 
 
 
