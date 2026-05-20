@@ -1,154 +1,239 @@
+
 const Appointment = require("../models/Appointment");
+const Patient = require("../models/Patient");
+const Doctor = require("../models/Doctor");
 
+exports.bookAppointment = async (payload) => {
+  const patient = await Patient.findById(payload.patient);
 
-
-// BOOK APPOINTMENT SERVICE
-const createAppointmentService = async (appointmentData) => {
-  const {
-    patient,
-    doctor,
-    appointmentDate,
-    reason,
-  } = appointmentData;
-
-
-  // PREVENT PAST DATES
-  const selectedDate = new Date(appointmentDate);
-  const currentDate = new Date();
-
-  if (selectedDate < currentDate) {
-    throw new Error("You cannot book past appointments");
+  if (!patient) {
+    const error = new Error("Patient not found");
+    error.statusCode = 404;
+    throw error;
   }
 
+  const doctor = await Doctor.findById(payload.doctor);
 
-  // PREVENT DOUBLE BOOKING
+  if (!doctor) {
+    const error = new Error("Doctor not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (doctor.status !== "active") {
+    const error = new Error("Doctor is not available for appointment");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const appointmentDate = new Date(payload.appointmentDate);
+  const today = new Date();
+
+  today.setHours(0, 0, 0, 0);
+  appointmentDate.setHours(0, 0, 0, 0);
+
+  if (appointmentDate < today) {
+    const error = new Error("Appointment date cannot be in the past");
+    error.statusCode = 400;
+    throw error;
+  }
+
   const existingAppointment = await Appointment.findOne({
-    doctor,
-    appointmentDate: selectedDate,
-    status: {
-      $in: ["pending", "confirmed"],
-    },
+    doctor: payload.doctor,
+    appointmentDate: appointmentDate,
+    appointmentTime: payload.appointmentTime,
+    status: { $in: ["pending", "confirmed"] },
   });
 
   if (existingAppointment) {
-    throw new Error("Doctor is already booked for this time");
+    const error = new Error("Doctor is already booked for this date and time");
+    error.statusCode = 409;
+    throw error;
   }
 
-
-  // CREATE APPOINTMENT
   const appointment = await Appointment.create({
-    patient,
-    doctor,
+    ...payload,
     appointmentDate,
-    reason,
   });
 
   return appointment;
 };
 
+exports.getAppointments = async (filters = {}) => {
+  const query = {};
 
+  if (filters.status) {
+    query.status = filters.status;
+  }
 
+  if (filters.patient) {
+    query.patient = filters.patient;
+  }
 
-// GET ALL APPOINTMENTS SERVICE
-const getAppointmentsService = async () => {
-  const appointments = await Appointment.find()
-    .populate("patient", "name email")
-    .populate("doctor", "name email")
-    .sort({ appointmentDate: 1 });
+  if (filters.doctor) {
+    query.doctor = filters.doctor;
+  }
+
+  const appointments = await Appointment.find(query)
+    .populate("patient")
+    .populate({
+      path: "doctor",
+      populate: [
+        {
+          path: "user",
+          select: "fullName email phone role isActive",
+        },
+        {
+          path: "department",
+          select: "name description status",
+        },
+      ],
+    })
+    .sort({ appointmentDate: 1, appointmentTime: 1 });
 
   return appointments;
 };
 
-
-
-
-// GET SINGLE APPOINTMENT SERVICE
-const getSingleAppointmentService = async (id) => {
+exports.getAppointmentById = async (id) => {
   const appointment = await Appointment.findById(id)
-    .populate("patient", "name email")
-    .populate("doctor", "name email");
+    .populate("patient")
+    .populate({
+      path: "doctor",
+      populate: [
+        {
+          path: "user",
+          select: "fullName email phone role isActive",
+        },
+        {
+          path: "department",
+          select: "name description status",
+        },
+      ],
+    });
 
   if (!appointment) {
-    throw new Error("Appointment not found");
+    const error = new Error("Appointment not found");
+    error.statusCode = 404;
+    throw error;
   }
 
   return appointment;
 };
 
-
-
-
-// CONFIRM APPOINTMENT SERVICE
-const confirmAppointmentService = async (id) => {
+exports.updateAppointment = async (id, payload) => {
   const appointment = await Appointment.findById(id);
 
   if (!appointment) {
-    throw new Error("Appointment not found");
+    const error = new Error("Appointment not found");
+    error.statusCode = 404;
+    throw error;
   }
 
-  appointment.status = "confirmed";
+  if (appointment.status === "completed") {
+    const error = new Error("Completed appointment cannot be updated");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (appointment.status === "cancelled") {
+    const error = new Error("Cancelled appointment cannot be updated");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (payload.appointmentDate || payload.appointmentTime) {
+    const newDate = payload.appointmentDate
+      ? new Date(payload.appointmentDate)
+      : appointment.appointmentDate;
+
+    const newTime = payload.appointmentTime || appointment.appointmentTime;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const checkDate = new Date(newDate);
+    checkDate.setHours(0, 0, 0, 0);
+
+    if (checkDate < today) {
+      const error = new Error("Appointment date cannot be in the past");
+      error.statusCode = 400;
+      throw error;
+    }
+
+    const existingAppointment = await Appointment.findOne({
+      _id: { $ne: id },
+      doctor: appointment.doctor,
+      appointmentDate: checkDate,
+      appointmentTime: newTime,
+      status: { $in: ["pending", "confirmed"] },
+    });
+
+    if (existingAppointment) {
+      const error = new Error("Doctor is already booked for this date and time");
+      error.statusCode = 409;
+      throw error;
+    }
+
+    payload.appointmentDate = checkDate;
+  }
+
+  Object.assign(appointment, payload);
 
   await appointment.save();
 
   return appointment;
 };
 
-
-
-
-// COMPLETE APPOINTMENT SERVICE
-const completeAppointmentService = async (id) => {
+exports.updateAppointmentStatus = async (id, status) => {
   const appointment = await Appointment.findById(id);
 
   if (!appointment) {
-    throw new Error("Appointment not found");
+    const error = new Error("Appointment not found");
+    error.statusCode = 404;
+    throw error;
   }
 
-  appointment.status = "completed";
+  if (appointment.status === "cancelled" && status === "completed") {
+    const error = new Error("Cancelled appointment cannot be completed");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (appointment.status === "completed" && status !== "completed") {
+    const error = new Error("Completed appointment status cannot be changed");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (appointment.status === "cancelled" && status !== "cancelled") {
+    const error = new Error("Cancelled appointment status cannot be changed");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  appointment.status = status;
 
   await appointment.save();
 
   return appointment;
 };
 
+exports.deleteAppointment = async (id) => {
+  const appointment = await Appointment.findById(id);
 
-
-
-// CHECK DOCTOR AVAILABILITY SERVICE
-const checkDoctorAvailabilityService = async (
-  doctorId,
-  appointmentDate
-) => {
-
-  const existingAppointment = await Appointment.findOne({
-    doctor: doctorId,
-    appointmentDate: new Date(appointmentDate),
-    status: {
-      $in: ["pending", "confirmed"],
-    },
-  });
-
-  if (existingAppointment) {
-    return {
-      available: false,
-      message: "Doctor is not available",
-    };
+  if (!appointment) {
+    const error = new Error("Appointment not found");
+    error.statusCode = 404;
+    throw error;
   }
 
-  return {
-    available: true,
-    message: "Doctor is available",
-  };
-};
+  if (appointment.status === "completed") {
+    const error = new Error("Completed appointment cannot be deleted");
+    error.statusCode = 400;
+    throw error;
+  }
 
+  await Appointment.findByIdAndDelete(id);
 
-
-
-module.exports = {
-  createAppointmentService,
-  getAppointmentsService,
-  getSingleAppointmentService,
-  confirmAppointmentService,
-  completeAppointmentService,
-  checkDoctorAvailabilityService,
+  return appointment;
 };

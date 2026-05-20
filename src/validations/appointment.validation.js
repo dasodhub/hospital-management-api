@@ -1,19 +1,26 @@
+
 const Joi = require("joi");
 
-const createAppointmentValidation = (data) => {
-  const schema = Joi.object({
-    patient: Joi.string().required(),
+exports.createAppointmentSchema = Joi.object({
+  patient: Joi.string().required(),
 
-    doctor: Joi.string().required(),
+  doctor: Joi.string().required(),
 
-    appointmentDate: Joi.date().required(),
+  appointmentDate: Joi.date().required(),
 
-    reason: Joi.string().min(3).required(),
-  });
+  appointmentTime: Joi.string().required(),
 
-  return schema.validate(data);
-};
+  reason: Joi.string().optional(),
+});
 
-module.exports = {
-  createAppointmentValidation,
-};
+exports.updateAppointmentSchema = Joi.object({
+  appointmentDate: Joi.date().optional(),
+
+  appointmentTime: Joi.string().optional(),
+
+  reason: Joi.string().optional(),
+
+  status: Joi.string()
+    .valid("pending", "confirmed", "cancelled", "completed")
+    .optional(),
+});

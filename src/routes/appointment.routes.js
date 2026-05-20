@@ -1,29 +1,72 @@
-const express = require("express");
+
+const router = require("express").Router();
+
+const appointmentController = require("../controllers/appointment.controller");
+const auth = require("../middlewares/auth.middleware");
+const allowRoles = require("../middlewares/role.middleware");
+const validate = require("../middlewares/validate.middleware");
 
 const {
-  bookAppointment,
-  getAppointments,
-  getSingleAppointment,
-  confirmAppointment,
-  completeAppointment,
-  checkDoctorAvailability,
-} = require("../controllers/appointment.controller");
+  createAppointmentSchema,
+  updateAppointmentSchema,
+} = require("../validations/appointment.validation");
 
-const router = express.Router();
-const authMiddleware = require("../middlewares/auth.middleware");
-const allowRoles = require("../middlewares/role.middleware");
+router.post(
+  "/",
+  auth,
+  allowRoles("admin", "receptionist", "patient"),
+  validate(createAppointmentSchema),
+  appointmentController.bookAppointment
+);
 
+router.get(
+  "/",
+  auth,
+  allowRoles("admin", "doctor", "nurse", "receptionist", "patient"),
+  appointmentController.getAppointments
+);
 
-router.post("/book", authMiddleware, allowRoles(["patient"]), bookAppointment);
+router.get(
+  "/:id",
+  auth,
+  allowRoles("admin", "doctor", "nurse", "receptionist", "patient"),
+  appointmentController.getAppointmentById
+);
 
-router.get("/", authMiddleware, allowRoles(["patient", "doctor"]), getAppointments);
+router.patch(
+  "/:id",
+  auth,
+  allowRoles("admin", "receptionist"),
+  validate(updateAppointmentSchema),
+  appointmentController.updateAppointment
+);
 
-router.get("/single/:id", authMiddleware, allowRoles(["patient", "doctor"]), getSingleAppointment);
+router.patch(
+  "/:id/confirm",
+  auth,
+  allowRoles("admin", "receptionist"),
+  appointmentController.confirmAppointment
+);
 
-router.patch("/confirm/:id", authMiddleware, allowRoles(["doctor"]), confirmAppointment);
+router.patch(
+  "/:id/cancel",
+  auth,
+  allowRoles("admin", "receptionist", "patient"),
+  appointmentController.cancelAppointment
+);
 
-router.patch("/complete/:id", authMiddleware, allowRoles(["doctor"]), completeAppointment);
+router.patch(
+  "/:id/complete",
+  auth,
+  allowRoles("admin", "doctor"),
+  appointmentController.completeAppointment
+);
 
-router.get("/availability", authMiddleware, allowRoles(["patient"]), checkDoctorAvailability);
+router.delete(
+  "/:id",
+  auth,
+  allowRoles("admin"),
+  appointmentController.deleteAppointment
+);
 
 module.exports = router;

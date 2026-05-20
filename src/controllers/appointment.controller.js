@@ -1,171 +1,94 @@
-const {
-  createAppointmentValidation,
-} = require("../validation/appointment.validation");
 
-const {
-  createAppointmentService,
-  getAppointmentsService,
-  getSingleAppointmentService,
-  confirmAppointmentService,
-  completeAppointmentService,
-  checkDoctorAvailabilityService,
-} = require("../services/appointment.service");
+const appointmentService = require("../services/appointment.service");
+const asyncHandler = require("../utils/asyncHandler");
+const { successResponse } = require("../utils/apiResponse");
 
+exports.bookAppointment = asyncHandler(async (req, res) => {
+  const appointment = await appointmentService.bookAppointment(req.body);
 
+  return successResponse(res, 201, "Appointment booked successfully", appointment);
+});
 
+exports.getAppointments = asyncHandler(async (req, res) => {
+  const appointments = await appointmentService.getAppointments(req.query);
 
-// BOOK APPOINTMENT
-const bookAppointment = async (req, res) => {
-  try {
+  return successResponse(
+    res,
+    200,
+    "Appointments fetched successfully",
+    appointments
+  );
+});
 
-    const { error } = createAppointmentValidation(req.body);
+exports.getAppointmentById = asyncHandler(async (req, res) => {
+  const appointment = await appointmentService.getAppointmentById(req.params.id);
 
-    if (error) {
-      return res.status(400).json({
-        message: error.details[0].message,
-      });
-    }
+  return successResponse(
+    res,
+    200,
+    "Appointment fetched successfully",
+    appointment
+  );
+});
 
+exports.updateAppointment = asyncHandler(async (req, res) => {
+  const appointment = await appointmentService.updateAppointment(
+    req.params.id,
+    req.body
+  );
 
-    const appointment = await createAppointmentService(req.body);
+  return successResponse(
+    res,
+    200,
+    "Appointment updated successfully",
+    appointment
+  );
+});
 
-    res.status(201).json({
-      message: "Appointment booked successfully",
-      appointment,
-    });
+exports.confirmAppointment = asyncHandler(async (req, res) => {
+  const appointment = await appointmentService.updateAppointmentStatus(
+    req.params.id,
+    "confirmed"
+  );
 
-  } catch (error) {
+  return successResponse(
+    res,
+    200,
+    "Appointment confirmed successfully",
+    appointment
+  );
+});
 
-    res.status(400).json({
-      message: error.message,
-    });
+exports.cancelAppointment = asyncHandler(async (req, res) => {
+  const appointment = await appointmentService.updateAppointmentStatus(
+    req.params.id,
+    "cancelled"
+  );
 
-  }
-};
+  return successResponse(
+    res,
+    200,
+    "Appointment cancelled successfully",
+    appointment
+  );
+});
 
+exports.completeAppointment = asyncHandler(async (req, res) => {
+  const appointment = await appointmentService.updateAppointmentStatus(
+    req.params.id,
+    "completed"
+  );
 
+  return successResponse(
+    res,
+    200,
+    "Appointment completed successfully",
+    appointment
+  );
+});
 
+exports.deleteAppointment = asyncHandler(async (req, res) => {
+  await appointmentService.deleteAppointment(req.params.id);
 
-// GET ALL APPOINTMENTS
-const getAppointments = async (req, res) => {
-  try {
-
-    const appointments = await getAppointmentsService();
-
-    res.status(200).json(appointments);
-
-  } catch (error) {
-
-    res.status(500).json({
-      message: error.message,
-    });
-
-  }
-};
-
-
-
-
-// GET SINGLE APPOINTMENT
-const getSingleAppointment = async (req, res) => {
-  try {
-
-    const appointment =
-      await getSingleAppointmentService(req.params.id);
-
-    res.status(200).json(appointment);
-
-  } catch (error) {
-
-    res.status(404).json({
-      message: error.message,
-    });
-
-  }
-};
-
-
-
-
-// CONFIRM APPOINTMENT
-const confirmAppointment = async (req, res) => {
-  try {
-
-    const appointment =
-      await confirmAppointmentService(req.params.id);
-
-    res.status(200).json({
-      message: "Appointment confirmed successfully",
-      appointment,
-    });
-
-  } catch (error) {
-
-    res.status(404).json({
-      message: error.message,
-    });
-
-  }
-};
-
-
-
-
-// COMPLETE APPOINTMENT
-const completeAppointment = async (req, res) => {
-  try {
-
-    const appointment =
-      await completeAppointmentService(req.params.id);
-
-    res.status(200).json({
-      message: "Appointment completed successfully",
-      appointment,
-    });
-
-  } catch (error) {
-
-    res.status(404).json({
-      message: error.message,
-    });
-
-  }
-};
-
-
-
-
-// CHECK DOCTOR AVAILABILITY
-const checkDoctorAvailability = async (req, res) => {
-  try {
-
-    const { doctorId, appointmentDate } = req.query;
-
-    const availability =
-      await checkDoctorAvailabilityService(
-        doctorId,
-        appointmentDate
-      );
-
-    res.status(200).json(availability);
-
-  } catch (error) {
-
-    res.status(500).json({
-      message: error.message,
-    });
-
-  }
-};
-
-
-
-
-module.exports = {
-  bookAppointment,
-  getAppointments,
-  getSingleAppointment,
-  confirmAppointment,
-  completeAppointment,
-  checkDoctorAvailability,
-};
+  return successResponse(res, 200, "Appointment deleted successfully");
+});
