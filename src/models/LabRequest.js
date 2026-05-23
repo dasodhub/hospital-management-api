@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const prescriptionSchema = new mongoose.Schema(
+const labRequestSchema = new mongoose.Schema(
   {
     patient: {
       type: mongoose.Schema.Types.ObjectId,
@@ -19,28 +19,29 @@ const prescriptionSchema = new mongoose.Schema(
       ref: "Consultation",
     },
 
-    medications: [
-      {
-        name: {
-          type: String,
-          required: true,
-        },
-        dosage: String,
-        frequency: String,
-        duration: String,
-        instruction: String,
-      },
-    ],
+    testName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
 
-    instructions: String,
+    testType: {
+      type: String,
+      trim: true,
+    },
+
+    reason: {
+      type: String,
+      trim: true,
+    },
 
     status: {
       type: String,
-      enum: ["pending", "dispensed", "cancelled"],
+      enum: ["pending", "in_progress", "completed", "cancelled"],
       default: "pending",
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Prescription", prescriptionSchema);
+module.exports = mongoose.model("LabRequest", labRequestSchema);
