@@ -1,46 +1,49 @@
 const mongoose = require("mongoose");
 
-const medicalRecordSchema = new mongoose.Schema(
+const consultationSchema = new mongoose.Schema(
   {
-    patientId: {
+    appointment: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Appointment",
+      required: true,
+    },
+
+    patient: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Patient",
       required: true,
     },
 
-    doctorId: {
+    doctor: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Doctor",
       required: true,
     },
 
-    consultationId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Consultation",
-      required: true,
-    },
-
     symptoms: {
-      type: String,
-      required: true,
-      trim: true,
+      type: [String],
+      default: [],
     },
 
     diagnosis: {
       type: String,
-      required: true,
-      trim: true,
-    },
-
-    treatment: {
-      type: String,
-      required: true,
       trim: true,
     },
 
     notes: {
       type: String,
-      default: "",
+      trim: true,
+    },
+
+    treatmentPlan: {
+      type: String,
+      trim: true,
+    },
+
+    status: {
+      type: String,
+      enum: ["ongoing", "completed", "cancelled"],
+      default: "ongoing",
     },
   },
   {
@@ -48,4 +51,4 @@ const medicalRecordSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("MedicalRecord", medicalRecordSchema);
+module.exports = mongoose.model("Consultation", consultationSchema);
