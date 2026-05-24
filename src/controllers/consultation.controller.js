@@ -58,6 +58,20 @@ exports.updateConsultation = asyncHandler(async (req, res) => {
   return successResponse(res, 200, "Consultation updated successfully", consultation);
 });
 
+exports.completeConsultation = asyncHandler(async (req, res) => {
+  const consultation = await consultationService.updateConsultationStatus(
+    req.params.id,
+    "completed"
+  );
+
+  return successResponse(
+    res,
+    200,
+    "Consultation completed successfully",
+    consultation
+  );
+});
+
 exports.deleteConsultation = asyncHandler(async (req, res) => {
   await consultationService.deleteConsultation(req.params.id);
   return successResponse(res, 200, "Consultation deleted successfully");

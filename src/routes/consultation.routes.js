@@ -47,6 +47,13 @@ router.patch(
   consultationController.updateConsultation
 );
 
+router.patch(
+  "/:id/complete",
+  authMiddleware,
+  allowRoles("admin", "doctor"),
+  consultationController.completeConsultation
+);
+
 router.delete(
   "/:id",
   authMiddleware,

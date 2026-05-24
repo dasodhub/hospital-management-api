@@ -1,65 +1,46 @@
 const MedicalRecord = require("../models/MedicalRecord");
+const Patient = require("../models/Patient");
+const Doctor = require("../models/Doctor");
 
+exports.createMedicalRecord = async (payload) => {
+  const patient = await Patient.findById(payload.patient);
 
-const createMedicalRecordService = async (data) => {
-  const { patientId, doctorId, consultationId, symptoms, diagnosis, treatment } = data;
-
-  
-  if (!patientId || !doctorId || !consultationId || !symptoms || !diagnosis || !treatment) {
-    throw new Error("All required fields must be provided");
+  if (!patient) {
+    const error = new Error("Patient not found");
+    error.statusCode = 404;
+    throw error;
   }
 
-  
-  const existingRecord = await MedicalRecord.findOne({ consultationId });
+  const doctor = await Doctor.findById(payload.doctor);
 
-  if (existingRecord) {
-    throw new Error("Medical record already exists for this consultation");
+  if (!doctor) {
+    const error = new Error("Doctor not found");
+    error.statusCode = 404;
+    throw error;
   }
 
-
-  const record = await MedicalRecord.create(data);
-
-  return record;
+  return MedicalRecord.create(payload);
 };
 
-
-const getPatientHistoryService = async (patientId) => {
-  if (!patientId) {
-    throw new Error("Patient ID is required");
-  }
-
-  const records = await MedicalRecord.find({ patientId })
+exports.getMedicalRecords = async () => {
+  return MedicalRecord.find()
+    .populate("patient")
+    .populate("doctor")
+    .populate("consultation")
     .sort({ createdAt: -1 });
-
-  return records;
 };
 
-
-const getDoctorRecordsService = async (doctorId) => {
-  if (!doctorId) {
-    throw new Error("Doctor ID is required");
-  }
-
-  const records = await MedicalRecord.find({ doctorId })
-    .sort({ createdAt: -1 });
-
-  return records;
-};
-
-
-const getSingleRecordService = async (id) => {
-  const record = await MedicalRecord.findById(id);
+exports.getMedicalRecordById = async (id) => {
+  const record = await MedicalRecord.findById(id)
+    .populate("patient")
+    .populate("doctor")
+    .populate("consultation");
 
   if (!record) {
-    throw new Error("Medical record not found");
+    const error = new Error("Medical record not found");
+    error.statusCode = 404;
+    throw error;
   }
 
   return record;
-};
-
-module.exports = {
-  createMedicalRecordService,
-  getPatientHistoryService,
-  getDoctorRecordsService,
-  getSingleRecordService,
 };

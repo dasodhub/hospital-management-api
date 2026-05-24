@@ -19,6 +19,12 @@ const appointmentSchema = new mongoose.Schema(
       required: true,
     },
 
+    appointmentTime: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
     reason: {
       type: String,
       required: true,
@@ -31,9 +37,7 @@ const appointmentSchema = new mongoose.Schema(
       default: "pending",
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Appointment", appointmentSchema);

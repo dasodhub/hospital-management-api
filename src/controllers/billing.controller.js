@@ -1,64 +1,30 @@
 const billingService = require("../services/billing.service");
-const Bill = require("../models/Billing");
+const asyncHandler = require("../utils/asyncHandler");
+const { successResponse } = require("../utils/apiResponse");
 
-exports.createBill = async (req, res, next) => {
-  try {
-    const bill = await billingService.createBill(req.body);
+exports.createBilling = asyncHandler(async (req, res) => {
+  const billing = await billingService.createBilling(req.body);
 
-    res.status(201).json({
-      success: true,
-      message: "Bill created successfully",
-      data: bill
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  return successResponse(res, 201, "Bill created successfully", billing);
+});
 
-exports.getBills = async (req, res, next) => {
-  try {
-    const bills = await billingService.getBills();
+exports.getBillings = asyncHandler(async (req, res) => {
+  const billings = await billingService.getBillings();
 
-    res.status(200).json({
-      success: true,
-      count: bills.length,
-      data: bills
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  return successResponse(res, 200, "Bills fetched successfully", billings);
+});
 
-exports.getSingleBill = async (req, res, next) => {
-  try {
-    const bill = await billingService.getSingleBill(req.params.id);
+exports.getBillingById = asyncHandler(async (req, res) => {
+  const billing = await billingService.getBillingById(req.params.id);
 
-    if (!bill) {
-      return res.status(404).json({
-        success: false,
-        message: "Bill not found"
-      });
-    }
+  return successResponse(res, 200, "Bill fetched successfully", billing);
+});
 
-    res.status(200).json({
-      success: true,
-      data: bill
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+exports.markAsPaid = asyncHandler(async (req, res) => {
+  const billing = await billingService.markAsPaid(
+    req.params.id,
+    req.body.paymentMethod
+  );
 
-exports.markBillAsPaid = async (req, res, next) => {
-  try {
-    const bill = await billingService.markBillAsPaid(req.params.id);
-
-    res.status(200).json({
-      success: true,
-      message: "Bill paid successfully",
-      data: bill
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  return successResponse(res, 200, "Bill marked as paid successfully", billing);
+});

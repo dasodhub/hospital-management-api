@@ -1,33 +1,11 @@
 const mongoose = require("mongoose");
 
-const billItemSchema = new mongoose.Schema({
-  itemName: {
-    type: String,
-    required: true,
-  },
-  quantity: {
-    type: Number,
-    required: true,
-    min: 1,
-  },
-  unitPrice: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
-  totalPrice: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
-});
-
 const billingSchema = new mongoose.Schema(
   {
     invoiceNumber: {
       type: String,
-      required: true,
       unique: true,
+      required: true,
     },
 
     patient: {
@@ -41,43 +19,45 @@ const billingSchema = new mongoose.Schema(
       ref: "Appointment",
     },
 
-    consultant: {
+    consultation: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Doctor",
+      ref: "Consultation",
     },
 
-    billItems: [billItemSchema],
+    items: [
+      {
+        title: {
+          type: String,
+          required: true,
+        },
+        amount: {
+          type: Number,
+          required: true,
+          min: 0,
+        },
+      },
+    ],
 
     totalAmount: {
       type: Number,
       required: true,
-      default: 0,
     },
 
     paymentStatus: {
       type: String,
-      enum: ["pending", "paid"],
-      default: "pending",
+      enum: ["unpaid", "paid", "cancelled"],
+      default: "unpaid",
     },
 
     paymentMethod: {
       type: String,
-      enum: ["cash", "card", "transfer", "insurance"],
-      default: "cash",
+      enum: ["cash", "card", "transfer", "insurance", "none"],
+      default: "none",
     },
 
-    paidAt: {
-      type: Date,
-      default: Date.now
-    },
-
-    notes: {
-      type: String,
-    },
+    paidAt: Date,
   },
-  {
-    timestamps: true,
-  },
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Billing", billingSchema);

@@ -4,9 +4,6 @@ const morgan = require("morgan");
 
 const routes = require("./routes");
 const errorMiddleware = require("./middlewares/error.middleware");
-const medicalRecordRoutes = require("./routes/medicalRecordRoutes");
-
-
 
 const app = express();
 
@@ -14,30 +11,28 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/api/medical-records", medicalRecordRoutes);
 
 app.get("/", (req, res) => {
-    res.status(200).json({
-        success: true,
-        message: "Hospital Management System API is running",
-    });
+  res.status(200).json({
+    success: true,
+    message: "Hospital Management System API is running",
+  });
 });
 
 app.get("/api/health", (req, res) => {
-    res.status(200).json({
-        success: true,
-        message: "Server is healthy",
-    });
+  res.status(200).json({
+    success: true,
+    message: "Server is healthy",
+  });
 });
-
 
 app.use("/api", routes);
 
 app.use((req, res) => {
-    res.status(404).json({
-        success: false,
-        message: "Route not found",
-    });
+  res.status(404).json({
+    success: false,
+    message: "Route not found",
+  });
 });
 
 app.use(errorMiddleware);

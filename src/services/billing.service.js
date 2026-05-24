@@ -1,72 +1,70 @@
 const Billing = require("../models/Billing");
-const generateId = require("../utils/generateId");
+const Patient = require("../models/Patient");
+const { generateInvoiceNumber } = require("../utils/generateId");
 
-const calculateTotalAmount = (billItems) => {
-  return billItems.reduce((acc, item) => {
-    return acc + item.totalPrice;
+exports.createBilling = async (payload) => {
+  const patient = await Patient.findById(payload.patient);
+
+  if (!patient) {
+    const error = new Error("Patient not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const totalAmount = payload.items.reduce((total, item) => {
+    return total + Number(item.amount);
   }, 0);
-};
 
-const createBill = async (data) => {
-  const processedItems = data.billItems.map((item) => ({
-    ...item,
-    totalPrice: item.quantity * item.unitPrice
-  }));
-
-  const totalAmount = calculateTotalAmount(processedItems);
-
-  const bill = await Billing.create({
-    // invoiceNumber: generateId("INV"),
-    invoiceNumber: data.invoiceNumber || generateId("INV"),
-    patient: data.patient,
-    appointment: data.appointment,
-    consultant: data.consultant,
-    billItems: processedItems,
+  return Billing.create({
+    ...payload,
+    invoiceNumber: generateInvoiceNumber(),
     totalAmount,
-    paymentMethod: data.paymentMethod,
-    notes: data.notes
   });
-
-  return bill;
 };
 
-const getBills = async () => {
-  return await Billing.find()
+exports.getBillings = async () => {
+  return Billing.find()
     .populate("patient")
     .populate("appointment")
-    .populate("consultant");
+    .populate("consultation")
+    .sort({ createdAt: -1 });
 };
 
-const getSingleBill = async (id) => {
-  return await Billing.findById(id)
+exports.getBillingById = async (id) => {
+  const billing = await Billing.findById(id)
     .populate("patient")
     .populate("appointment")
-    .populate("consultant");
-};
+    .populate("consultation");
 
-const markBillAsPaid = async (id) => {
-  const bill = await Billing.findById(id);
-
-  if (!bill) {
-    throw new Error("Bill not found");
+  if (!billing) {
+    const error = new Error("Billing record not found");
+    error.statusCode = 404;
+    throw error;
   }
 
-  if (bill.paymentStatus === "paid") {
-    throw new Error("Bill has already been paid");
-  }
-
-  bill.paymentStatus = "paid";
-  bill.paidAt = new Date();
-
-  await bill.save();
-
-  return bill;
+  return billing;
 };
 
-module.exports = {
-  createBill,
-  getBills,
-  getSingleBill,
-  markBillAsPaid,
-  calculateTotalAmount
+exports.markAsPaid = async (id, paymentMethod) => {
+  const billing = await Billing.findById(id);
+
+  if (!billing) {
+    const error = new Error("Billing record not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (billing.paymentStatus === "paid") {
+    const error = new Error("This bill has already been paid");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  billing.paymentStatus = "paid";
+  billing.paymentMethod = paymentMethod;
+  billing.paidAt = new Date();
+
+  await billing.save();
+
+  return billing;
 };

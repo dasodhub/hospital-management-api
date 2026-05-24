@@ -1,7 +1,7 @@
-const generateId = (prefix) => {
-  const timestamp = Date.now().toString();
-  const random = Math.floor(Math.random() * 1000).toString().padStart(3, "0");
-  return `${prefix}-${timestamp}-${random}`;
+exports.generatePatientId = () => {
+  return `PAT-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
 };
 
-module.exports = generateId;
+exports.generateInvoiceNumber = () => {
+  return `INV-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
+};

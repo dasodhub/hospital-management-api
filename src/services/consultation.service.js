@@ -108,6 +108,49 @@ exports.updateConsultation = async (id, data) => {
   return updated;
 };
 
+exports.updateConsultationStatus = async (id, status) => {
+  const consultation = await Consultation.findById(id);
+
+  if (!consultation) {
+    const error = new Error("Consultation not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (consultation.status === "cancelled" && status === "completed") {
+    const error = new Error("Cancelled consultation cannot be completed");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (consultation.status === "completed" && status !== "completed") {
+    const error = new Error("Completed consultation status cannot be changed");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (consultation.status === "cancelled" && status !== "cancelled") {
+    const error = new Error("Cancelled consultation status cannot be changed");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  consultation.status = status;
+  await consultation.save();
+
+  return consultation.populate([
+    { path: "appointment" },
+    {
+      path: "patient",
+      populate: { path: "user", select: "fullName email phone" },
+    },
+    {
+      path: "doctor",
+      populate: { path: "user", select: "fullName email phone" },
+    },
+  ]);
+};
+
 exports.deleteConsultation = async (id) => {
   const consultation = await Consultation.findById(id);
 

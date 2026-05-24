@@ -2,28 +2,21 @@ const mongoose = require("mongoose");
 
 const medicalRecordSchema = new mongoose.Schema(
   {
-    patientId: {
+    patient: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Patient",
       required: true,
     },
 
-    doctorId: {
+    doctor: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Doctor",
       required: true,
     },
 
-    consultationId: {
+    consultation: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Consultation",
-      required: true,
-    },
-
-    symptoms: {
-      type: String,
-      required: true,
-      trim: true,
     },
 
     diagnosis: {
@@ -34,18 +27,20 @@ const medicalRecordSchema = new mongoose.Schema(
 
     treatment: {
       type: String,
-      required: true,
       trim: true,
     },
 
     notes: {
       type: String,
-      default: "",
+      trim: true,
+    },
+
+    recordDate: {
+      type: Date,
+      default: Date.now,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("MedicalRecord", medicalRecordSchema);

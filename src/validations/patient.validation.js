@@ -1,6 +1,18 @@
 const Joi = require("joi");
 
 const createPatientSchema = Joi.object({
+  firstName: Joi.string()
+    .required()
+    .messages({
+      "any.required": "First name is required",
+    }),
+
+  lastName: Joi.string()
+    .required()
+    .messages({
+      "any.required": "Last name is required",
+    }),
+
   gender: Joi.string()
     .valid("male", "female", "other")
     .required()
@@ -59,6 +71,8 @@ const createPatientSchema = Joi.object({
 });
 
 const updatePatientSchema = Joi.object({
+  firstName: Joi.string(),
+  lastName: Joi.string(),
   gender: Joi.string().valid("male", "female", "other"),
   dateOfBirth: Joi.date(),
   phone: Joi.string(),
