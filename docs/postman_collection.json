@@ -1,15 +1,15 @@
 {
   "info": {
-    "name": "Hospital Management System API",
-    "description": "Postman collection for Group 4 Hospital Management System API",
+    "name": "Hospital Management System API - Full Workflow Test",
+    "description": "Full Postman workflow collection for TS Academy Group 4 Hospital Management System API.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Auth",
+      "name": "01 Auth and Users",
       "item": [
         {
-          "name": "Register User",
+          "name": "Register Admin",
           "request": {
             "method": "POST",
             "header": [
@@ -19,40 +19,40 @@
                 "type": "text"
               }
             ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"fullName\": \"System Admin\",\n  \"email\": \"admin@hospital.com\",\n  \"password\": \"password123\",\n  \"phone\": \"08012345678\",\n  \"role\": \"admin\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
             "url": {
               "raw": "{{base_url}}/api/auth/register",
               "host": ["{{base_url}}"],
               "path": ["api", "auth", "register"]
             },
-            "description": "Register a new user account. This endpoint is public and does not require authentication."
-          },
-          "response": [
-            {
-              "name": "User registered successfully",
-              "status": "Created",
-              "code": 201,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"System Admin\",\n  \"email\": \"admin@hospital.com\",\n  \"password\": \"password123\",\n  \"phone\": \"08010000000\",\n  \"role\": \"admin\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
                 }
-              ],
-              "body": "{\n  \"success\": true,\n  \"message\": \"User registered successfully\",\n  \"data\": {\n    \"user\": {\n      \"id\": \"69ff01f3ac79332499cb4a02\",\n      \"fullName\": \"System Admin\",\n      \"email\": \"admin@hospital.com\",\n      \"phone\": \"08012345678\",\n      \"role\": \"admin\",\n      \"isActive\": true\n    },\n    \"token\": \"{{token}}\"\n  }\n}"
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "  pm.collectionVariables.set('token', jsonData.data.token);",
+                  "}"
+                ]
+              }
             }
           ]
         },
         {
-          "name": "Login User",
+          "name": "Login Admin",
           "request": {
             "method": "POST",
             "header": [
@@ -62,6 +62,12 @@
                 "type": "text"
               }
             ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"admin@hospital.com\",\n  \"password\": \"password123\"\n}",
@@ -70,27 +76,21 @@
                   "language": "json"
                 }
               }
-            },
-            "url": {
-              "raw": "{{base_url}}/api/auth/login",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "login"]
-            },
-            "description": "Login a registered user and return a JWT token."
+            }
           },
-          "response": [
+          "response": [],
+          "event": [
             {
-              "name": "Login successful",
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"success\": true,\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"user\": {\n      \"id\": \"69ff01f3ac79332499cb4a02\",\n      \"fullName\": \"System Admin\",\n      \"email\": \"admin@hospital.com\",\n      \"phone\": \"08012345678\",\n      \"role\": \"admin\",\n      \"isActive\": true\n    },\n    \"token\": \"{{token}}\"\n  }\n}"
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "  pm.collectionVariables.set('token', jsonData.data.token);",
+                  "}"
+                ]
+              }
             }
           ]
         },
@@ -110,31 +110,252 @@
               "host": ["{{base_url}}"],
               "path": ["api", "auth", "me"]
             },
-            "description": "Fetch the profile of the currently authenticated user."
+            "description": ""
           },
-          "response": [
-            {
-              "name": "Profile fetched successfully",
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
+          "response": []
+        },
+        {
+          "name": "Register Doctor User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Dr John Doe\",\n  \"email\": \"doctor@hospital.com\",\n  \"password\": \"password123\",\n  \"phone\": \"08020000000\",\n  \"role\": \"doctor\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
                 }
-              ],
-              "body": "{\n  \"success\": true,\n  \"message\": \"Profile fetched successfully\",\n  \"data\": {\n    \"_id\": \"69ff01f3ac79332499cb4a02\",\n    \"fullName\": \"System Admin\",\n    \"email\": \"admin@hospital.com\",\n    \"phone\": \"08012345678\",\n    \"role\": \"admin\",\n    \"isActive\": true,\n    \"createdAt\": \"2026-05-08T15:46:52.722Z\",\n    \"updatedAt\": \"2026-05-08T15:46:52.722Z\",\n    \"__v\": 0\n  }\n}"
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.user && jsonData.data.user.id) {",
+                  "  pm.collectionVariables.set('doctor_user_id', jsonData.data && jsonData.data.user && jsonData.data.user.id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Register Lab Scientist",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Lab Scientist Mary\",\n  \"email\": \"lab@hospital.com\",\n  \"password\": \"password123\",\n  \"phone\": \"08040000000\",\n  \"role\": \"lab_scientist\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Lab Scientist",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"lab@hospital.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "  pm.collectionVariables.set('lab_token', jsonData.data.token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Register Pharmacist",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Pharmacist Peter\",\n  \"email\": \"pharmacy@hospital.com\",\n  \"password\": \"password123\",\n  \"phone\": \"08050000000\",\n  \"role\": \"pharmacist\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Pharmacist",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"pharmacy@hospital.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "  pm.collectionVariables.set('pharmacist_token', jsonData.data.token);",
+                  "}"
+                ]
+              }
             }
           ]
         }
       ]
     },
     {
-      "name": "Users",
+      "name": "02 Department",
       "item": [
         {
-          "name": "Get All Users",
+          "name": "Create Department",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/departments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "departments"]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"General Medicine\",\n  \"description\": \"For consultations, routine check-ups, and follow-ups.\",\n  \"status\": \"active\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data._id) {",
+                  "  pm.collectionVariables.set('department_id', jsonData.data && jsonData.data._id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Departments",
           "request": {
             "method": "GET",
             "header": [
@@ -145,30 +366,16 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/api/users",
+              "raw": "{{base_url}}/api/departments",
               "host": ["{{base_url}}"],
-              "path": ["api", "users"]
+              "path": ["api", "departments"]
             },
-            "description": "Fetch all users. This endpoint should be accessed by an admin."
+            "description": ""
           },
-          "response": [
-            {
-              "name": "Users fetched successfully",
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"success\": true,\n  \"message\": \"Users fetched successfully\",\n  \"data\": [\n    {\n      \"_id\": \"69ff01f3ac79332499cb4a02\",\n      \"fullName\": \"System Admin\",\n      \"email\": \"admin@hospital.com\",\n      \"phone\": \"08012345678\",\n      \"role\": \"admin\",\n      \"isActive\": true,\n      \"createdAt\": \"2026-05-08T15:46:52.722Z\",\n      \"updatedAt\": \"2026-05-08T15:46:52.722Z\",\n      \"__v\": 0\n    }\n  ]\n}"
-            }
-          ]
+          "response": []
         },
         {
-          "name": "Get Single User",
+          "name": "Get Single Department",
           "request": {
             "method": "GET",
             "header": [
@@ -179,30 +386,109 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/api/users/{{user_id}}",
+              "raw": "{{base_url}}/api/departments/{{department_id}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "users", "{{user_id}}"]
+              "path": ["api", "departments", "{{department_id}}"]
             },
-            "description": "Fetch one user by user ID. Replace {{user_id}} with the real MongoDB user ID."
+            "description": ""
           },
-          "response": [
-            {
-              "name": "User fetched successfully",
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "03 Doctor",
+      "item": [
+        {
+          "name": "Create Doctor Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/doctors",
+              "host": ["{{base_url}}"],
+              "path": ["api", "doctors"]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": \"{{doctor_user_id}}\",\n  \"department\": \"{{department_id}}\",\n  \"specialization\": \"General Medicine\",\n  \"qualification\": \"MBBS\",\n  \"yearsOfExperience\": 5,\n  \"availableDays\": [\n    \"monday\",\n    \"wednesday\",\n    \"friday\"\n  ],\n  \"availableTimes\": [\n    \"09:00 AM - 12:00 PM\",\n    \"02:00 PM - 04:00 PM\"\n  ],\n  \"consultationFee\": 5000,\n  \"status\": \"active\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
                 }
-              ],
-              "body": "{\n  \"success\": true,\n  \"message\": \"User fetched successfully\",\n  \"data\": {\n    \"_id\": \"69ff01f3ac79332499cb4a02\",\n    \"fullName\": \"System Admin\",\n    \"email\": \"admin@hospital.com\",\n    \"phone\": \"08012345678\",\n    \"role\": \"admin\",\n    \"isActive\": true,\n    \"createdAt\": \"2026-05-08T15:46:52.722Z\",\n    \"updatedAt\": \"2026-05-08T15:46:52.722Z\",\n    \"__v\": 0\n  }\n}"
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data._id) {",
+                  "  pm.collectionVariables.set('doctor_id', jsonData.data && jsonData.data._id);",
+                  "}"
+                ]
+              }
             }
           ]
         },
         {
-          "name": "Update User",
+          "name": "Get Doctors",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/doctors",
+              "host": ["{{base_url}}"],
+              "path": ["api", "doctors"]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Doctor",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/doctors/{{doctor_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "doctors", "{{doctor_id}}"]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Update Doctor Profile",
           "request": {
             "method": "PATCH",
             "header": [
@@ -217,40 +503,212 @@
                 "type": "text"
               }
             ],
+            "url": {
+              "raw": "{{base_url}}/api/doctors/{{doctor_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "doctors", "{{doctor_id}}"]
+            },
+            "description": "",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"fullName\": \"System Admin\",\n  \"phone\": \"08012345666\"\n}",
+              "raw": "{\n  \"specialization\": \"Family Medicine\",\n  \"yearsOfExperience\": 6,\n  \"consultationFee\": 7000\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
-            },
-            "url": {
-              "raw": "{{base_url}}/api/users/{{user_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "users", "{{user_id}}"]
-            },
-            "description": "Update a user. Replace {{user_id}} with the real MongoDB user ID."
+            }
           },
-          "response": [
-            {
-              "name": "User updated successfully",
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "04 Patient",
+      "item": [
+        {
+          "name": "Create Patient",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/patients",
+              "host": ["{{base_url}}"],
+              "path": ["api", "patients"]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Doe\",\n  \"gender\": \"female\",\n  \"dateOfBirth\": \"1998-02-10\",\n  \"phone\": \"08030000000\",\n  \"address\": \"Lekki Phase 1, Lagos\",\n  \"bloodGroup\": \"O+\",\n  \"genotype\": \"AA\",\n  \"emergencyContact\": {\n    \"name\": \"James Doe\",\n    \"phone\": \"08030000001\",\n    \"relationship\": \"Brother\"\n  },\n  \"allergies\": [\n    \"Penicillin\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
                 }
-              ],
-              "body": "{\n  \"success\": true,\n  \"message\": \"User updated successfully\",\n  \"data\": {\n    \"_id\": \"69ff01f3ac79332499cb4a02\",\n    \"fullName\": \"System Admin\",\n    \"email\": \"admin@hospital.com\",\n    \"phone\": \"08012345666\",\n    \"role\": \"admin\",\n    \"isActive\": true,\n    \"createdAt\": \"2026-05-08T15:46:52.722Z\",\n    \"updatedAt\": \"2026-05-09T09:18:20.240Z\",\n    \"__v\": 0\n  }\n}"
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data._id) {",
+                  "  pm.collectionVariables.set('patient_id', jsonData.data && jsonData.data._id);",
+                  "}"
+                ]
+              }
             }
           ]
         },
         {
-          "name": "Disable User",
+          "name": "Get Patients",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/patients",
+              "host": ["{{base_url}}"],
+              "path": ["api", "patients"]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Patient",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/patients/{{patient_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "patients", "{{patient_id}}"]
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "05 Appointment",
+      "item": [
+        {
+          "name": "Book Appointment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/appointments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "appointments"]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient\": \"{{patient_id}}\",\n  \"doctor\": \"{{doctor_id}}\",\n  \"appointmentDate\": \"2026-06-01\",\n  \"appointmentTime\": \"09:00 AM\",\n  \"reason\": \"General body checkup and fever symptoms\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data._id) {",
+                  "  pm.collectionVariables.set('appointment_id', jsonData.data && jsonData.data._id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Appointments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/appointments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "appointments"]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Appointment",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/appointments/{{appointment_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "appointments", "{{appointment_id}}"]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Confirm Appointment",
           "request": {
             "method": "PATCH",
             "header": [
@@ -261,30 +719,608 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/api/users/{{user_id}}/disable",
+              "raw": "{{base_url}}/api/appointments/{{appointment_id}}/confirm",
               "host": ["{{base_url}}"],
-              "path": ["api", "users", "{{user_id}}", "disable"]
+              "path": ["api", "appointments", "{{appointment_id}}", "confirm"]
             },
-            "description": "Disable a user account. Replace {{user_id}} with the real MongoDB user ID."
+            "description": ""
           },
-          "response": [
-            {
-              "name": "User disabled successfully",
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "06 Consultation",
+      "item": [
+        {
+          "name": "Create Consultation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/consultations",
+              "host": ["{{base_url}}"],
+              "path": ["api", "consultations"]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"appointment\": \"{{appointment_id}}\",\n  \"patient\": \"{{patient_id}}\",\n  \"doctor\": \"{{doctor_id}}\",\n  \"symptoms\": [\n    \"Fever\",\n    \"Headache\",\n    \"Body weakness\"\n  ],\n  \"diagnosis\": \"Suspected malaria\",\n  \"notes\": \"Patient reports fever and body weakness for two days.\",\n  \"treatmentPlan\": \"Send patient to lab for malaria parasite test.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
                 }
-              ],
-              "body": "{\n  \"success\": true,\n  \"message\": \"User disabled successfully\",\n  \"data\": {\n    \"_id\": \"69ff01f3ac79332499cb4a02\",\n    \"fullName\": \"System Admin\",\n    \"email\": \"admin@hospital.com\",\n    \"phone\": \"08012345666\",\n    \"role\": \"admin\",\n    \"isActive\": false,\n    \"createdAt\": \"2026-05-08T15:46:52.722Z\",\n    \"updatedAt\": \"2026-05-09T09:20:40.451Z\",\n    \"__v\": 0\n  }\n}"
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data._id) {",
+                  "  pm.collectionVariables.set('consultation_id', jsonData.data && jsonData.data._id);",
+                  "}"
+                ]
+              }
             }
           ]
         },
         {
-          "name": "Enable User",
+          "name": "Get Consultations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/consultations",
+              "host": ["{{base_url}}"],
+              "path": ["api", "consultations"]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Consultation",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/consultations/{{consultation_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "consultations", "{{consultation_id}}"]
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "07 Lab Request and Result",
+      "item": [
+        {
+          "name": "Create Lab Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/labs/requests",
+              "host": ["{{base_url}}"],
+              "path": ["api", "labs", "requests"]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient\": \"{{patient_id}}\",\n  \"doctor\": \"{{doctor_id}}\",\n  \"consultation\": \"{{consultation_id}}\",\n  \"testName\": \"Malaria Parasite Test\",\n  \"testType\": \"Blood Test\",\n  \"reason\": \"Patient has fever, headache, and body weakness.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data._id) {",
+                  "  pm.collectionVariables.set('lab_request_id', jsonData.data && jsonData.data._id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Lab Requests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/labs/requests",
+              "host": ["{{base_url}}"],
+              "path": ["api", "labs", "requests"]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Lab Request",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/labs/requests/{{lab_request_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "labs", "requests", "{{lab_request_id}}"]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Lab Result",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/labs/results",
+              "host": ["{{base_url}}"],
+              "path": ["api", "labs", "results"]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"labRequest\": \"{{lab_request_id}}\",\n  \"patient\": \"{{patient_id}}\",\n  \"result\": \"Malaria parasite detected: Positive\",\n  \"comment\": \"Patient tested positive for malaria parasite. Further treatment recommended.\",\n  \"resultFile\": \"malaria-result.pdf\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data._id) {",
+                  "  pm.collectionVariables.set('lab_result_id', jsonData.data && jsonData.data._id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Lab Results",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/labs/results",
+              "host": ["{{base_url}}"],
+              "path": ["api", "labs", "results"]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Lab Result",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/labs/results/{{lab_result_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "labs", "results", "{{lab_result_id}}"]
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "08 Prescription",
+      "item": [
+        {
+          "name": "Create Prescription",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/prescriptions",
+              "host": ["{{base_url}}"],
+              "path": ["api", "prescriptions"]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient\": \"{{patient_id}}\",\n  \"doctor\": \"{{doctor_id}}\",\n  \"consultation\": \"{{consultation_id}}\",\n  \"medications\": [\n    {\n      \"name\": \"Artemether Lumefantrine\",\n      \"dosage\": \"80/480mg\",\n      \"frequency\": \"Twice daily\",\n      \"duration\": \"3 days\",\n      \"instruction\": \"Take after meal\"\n    },\n    {\n      \"name\": \"Paracetamol\",\n      \"dosage\": \"500mg\",\n      \"frequency\": \"Three times daily\",\n      \"duration\": \"3 days\",\n      \"instruction\": \"Take after meal if fever persists\"\n    }\n  ],\n  \"instructions\": \"Patient should complete medication and return if symptoms continue.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data._id) {",
+                  "  pm.collectionVariables.set('prescription_id', jsonData.data && jsonData.data._id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Prescriptions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/prescriptions",
+              "host": ["{{base_url}}"],
+              "path": ["api", "prescriptions"]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Prescription",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/prescriptions/{{prescription_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "prescriptions", "{{prescription_id}}"]
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "09 Pharmacy",
+      "item": [
+        {
+          "name": "Dispense Prescription",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pharmacy/dispense",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pharmacy", "dispense"]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"prescription\": \"{{prescription_id}}\",\n  \"patient\": \"{{patient_id}}\",\n  \"drugsDispensed\": [\n    {\n      \"name\": \"Artemether Lumefantrine\",\n      \"quantity\": 1,\n      \"note\": \"One pack dispensed\"\n    },\n    {\n      \"name\": \"Paracetamol\",\n      \"quantity\": 10,\n      \"note\": \"Ten tablets dispensed\"\n    }\n  ],\n  \"status\": \"dispensed\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data._id) {",
+                  "  pm.collectionVariables.set('pharmacy_record_id', jsonData.data && jsonData.data._id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Pharmacy Records",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pharmacy",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pharmacy"]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Pharmacy Record",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pharmacy/{{pharmacy_record_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pharmacy", "{{pharmacy_record_id}}"]
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "10 Billing",
+      "item": [
+        {
+          "name": "Create Bill",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/billing",
+              "host": ["{{base_url}}"],
+              "path": ["api", "billing"]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient\": \"{{patient_id}}\",\n  \"appointment\": \"{{appointment_id}}\",\n  \"consultation\": \"{{consultation_id}}\",\n  \"items\": [\n    {\n      \"title\": \"Consultation Fee\",\n      \"amount\": 5000\n    },\n    {\n      \"title\": \"Malaria Parasite Test\",\n      \"amount\": 3000\n    },\n    {\n      \"title\": \"Medication\",\n      \"amount\": 4500\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data._id) {",
+                  "  pm.collectionVariables.set('billing_id', jsonData.data && jsonData.data._id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Bills",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/billing",
+              "host": ["{{base_url}}"],
+              "path": ["api", "billing"]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Bill",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/billing/{{billing_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "billing", "{{billing_id}}"]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Mark Bill As Paid",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/billing/{{billing_id}}/pay",
+              "host": ["{{base_url}}"],
+              "path": ["api", "billing", "{{billing_id}}", "pay"]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethod\": \"cash\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "11 Final Completion",
+      "item": [
+        {
+          "name": "Complete Consultation",
           "request": {
             "method": "PATCH",
             "header": [
@@ -295,32 +1331,23 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/api/users/{{user_id}}/enable",
+              "raw": "{{base_url}}/api/consultations/{{consultation_id}}/complete",
               "host": ["{{base_url}}"],
-              "path": ["api", "users", "{{user_id}}", "enable"]
+              "path": [
+                "api",
+                "consultations",
+                "{{consultation_id}}",
+                "complete"
+              ]
             },
-            "description": "Enable a disabled user account. Replace {{user_id}} with the real MongoDB user ID."
+            "description": ""
           },
-          "response": [
-            {
-              "name": "User enabled successfully",
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"success\": true,\n  \"message\": \"User enabled successfully\",\n  \"data\": {\n    \"_id\": \"69ff01f3ac79332499cb4a02\",\n    \"fullName\": \"System Admin\",\n    \"email\": \"admin@hospital.com\",\n    \"phone\": \"08012345666\",\n    \"role\": \"admin\",\n    \"isActive\": true,\n    \"createdAt\": \"2026-05-08T15:46:52.722Z\",\n    \"updatedAt\": \"2026-05-09T09:24:13.204Z\",\n    \"__v\": 0\n  }\n}"
-            }
-          ]
+          "response": []
         },
         {
-          "name": "Delete User",
+          "name": "Complete Appointment",
           "request": {
-            "method": "DELETE",
+            "method": "PATCH",
             "header": [
               {
                 "key": "Authorization",
@@ -329,27 +1356,13 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/api/users/{{user_id}}",
+              "raw": "{{base_url}}/api/appointments/{{appointment_id}}/complete",
               "host": ["{{base_url}}"],
-              "path": ["api", "users", "{{user_id}}"]
+              "path": ["api", "appointments", "{{appointment_id}}", "complete"]
             },
-            "description": "Delete a user account. Replace {{user_id}} with the real MongoDB user ID."
+            "description": ""
           },
-          "response": [
-            {
-              "name": "User deleted successfully",
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"success\": true,\n  \"message\": \"User deleted successfully\",\n  \"data\": null\n}"
-            }
-          ]
+          "response": []
         }
       ]
     }
@@ -366,8 +1379,68 @@
       "type": "string"
     },
     {
-      "key": "user_id",
-      "value": "69ff01f3ac79332499cb4a02",
+      "key": "lab_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "pharmacist_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "department_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "doctor_user_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "doctor_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "patient_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "appointment_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "consultation_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "lab_request_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "lab_result_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "prescription_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "pharmacy_record_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "billing_id",
+      "value": "",
       "type": "string"
     }
   ]

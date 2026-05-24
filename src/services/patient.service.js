@@ -1,16 +1,8 @@
 const Patient = require("../models/Patient");
 
 
-const createPatient = async (userId, patientData) => {
-  
-  const existingPatient = await Patient.findOne({ user: userId });
-  if (existingPatient) {
-    throw new Error("Patient record already exists for this user");
-  }
-
-  
+const createPatient = async (patientData) => {
   const patient = await Patient.create({
-    user: userId,
     ...patientData,
   });
 

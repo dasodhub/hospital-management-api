@@ -1,42 +1,38 @@
-const express = require("express");
-const router = express.Router();
+const router = require("express").Router();
+
+const prescriptionController = require("../controllers/prescription.controller");
+const auth = require("../middlewares/auth.middleware");
+const allowRoles = require("../middlewares/role.middleware");
+const validate = require("../middlewares/validate.middleware");
+
 const {
-  createPrescription,
-  getPrescriptions,
-  getPrescriptionById,
-  updatePrescription,
-  cancelPrescription,
-  deletePrescription,
-  getPatientPrescriptions,
-  getPrescriptionStats,
-} = require("../controllers/prescriptionController");
+  createPrescriptionSchema,
+  updatePrescriptionStatusSchema,
+} = require("../validations/prescription.validation");
 
-const { protect, authorize } = require("../middlewares/authMiddleware");
-const { validatePrescription } = require("../middlewares/prescriptionValidator");
+router.post(
+  "/",
+  auth,
+  allowRoles("admin", "doctor"),
+  validate(createPrescriptionSchema),
+  prescriptionController.createPrescription
+);
 
-// All routes are protected
-router.use(protect);
+router.get(
+  "/",
+  auth,
+  allowRoles("admin", "doctor", "pharmacist"),
+  prescriptionController.getPrescriptions
+);
 
-// GET all / POST new
-router
-  .route("/")
-  .get(getPrescriptions)
-  .post(authorize("doctor", "admin"), validatePrescription, createPrescription);
+router.get("/:id", auth, prescriptionController.getPrescriptionById);
 
-// GET stats — admin only
-router.get("/stats", authorize("admin"), getPrescriptionStats);
-
-// GET prescriptions for a specific patient
-router.get("/patient/:patientId", authorize("doctor", "admin"), getPatientPrescriptions);
-
-// GET / PUT / DELETE single prescription
-router
-  .route("/:id")
-  .get(getPrescriptionById)
-  .put(authorize("doctor", "admin"), updatePrescription)
-  .delete(authorize("admin"), deletePrescription);
-
-// PATCH — cancel a prescription (soft delete)
-router.patch("/:id/cancel", authorize("doctor", "admin"), cancelPrescription);
+router.patch(
+  "/:id/status",
+  auth,
+  allowRoles("admin", "doctor", "pharmacist"),
+  validate(updatePrescriptionStatusSchema),
+  prescriptionController.updatePrescriptionStatus
+);
 
 module.exports = router;

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const medicalRecordSchema = new mongoose.Schema(
+const labRequestSchema = new mongoose.Schema(
   {
     patient: {
       type: mongoose.Schema.Types.ObjectId,
@@ -19,28 +19,29 @@ const medicalRecordSchema = new mongoose.Schema(
       ref: "Consultation",
     },
 
-    diagnosis: {
+    testName: {
       type: String,
       required: true,
       trim: true,
     },
 
-    treatment: {
+    testType: {
       type: String,
       trim: true,
     },
 
-    notes: {
+    reason: {
       type: String,
       trim: true,
     },
 
-    recordDate: {
-      type: Date,
-      default: Date.now,
+    status: {
+      type: String,
+      enum: ["pending", "in_progress", "completed", "cancelled"],
+      default: "pending",
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("MedicalRecord", medicalRecordSchema);
+module.exports = mongoose.model("LabRequest", labRequestSchema);

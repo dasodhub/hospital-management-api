@@ -16,7 +16,7 @@ exports.createPatient = asyncHandler(async (req, res) => {
     return errorResponse(res, 400, error.details.map((e) => e.message).join(", "));
   }
 
-  const patient = await patientService.createPatient(req.user._id, value);
+  const patient = await patientService.createPatient(value);
   return successResponse(res, 201, "Patient created successfully", patient);
 });
 

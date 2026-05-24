@@ -3,14 +3,23 @@ const mongoose = require("mongoose");
 
 const patientSchema = new mongoose.Schema(
   {
-    
+    firstName: {
+      type: String,
+      required: [true, "First name is required"],
+      trim: true,
+    },
+
+    lastName: {
+      type: String,
+      required: [true, "Last name is required"],
+      trim: true,
+    },
+
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
     },
 
-    
     patientId: {
       type: String,
       unique: true,
