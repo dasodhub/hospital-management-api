@@ -366,6 +366,8 @@ TS Academy Group 4 — Hospital Management System Team
 - atasiegloria@gmail.com
 - maryammamcy@gmail.com
 - johnoshoke64@gmail.com
+- isiekwedaniel@gmail.com
+- collinsobetta4@gmail.com
 
 ## License
 
